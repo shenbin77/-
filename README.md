@@ -438,11 +438,8 @@ pip install -r requirements_minimal.txt
 
 欢迎提交Issue和Pull Request来改进这个项目。
 
-## 📞 联系方式
 
-如有问题或建议，请通过以下方式联系：
-- 提交Issue
-- 发送邮件：39189996@qq.com
+
 
 ---
 
