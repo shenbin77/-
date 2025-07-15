@@ -30,25 +30,49 @@ jobs:
         mkdir -p logs
         mkdir -p reports
     
+    - name: Set up environment variables
+      run: |
+        echo "TUSHARE_TOKEN=${{ secrets.TUSHARE }}" >> $GITHUB_ENV
+        echo "FLASK_SECRET_KEY=${{ secrets.FLASK_SECRET_KEY }}" >> $GITHUB_ENV
+        echo "DATABASE_URL=sqlite:///stock_analysis.db" >> $GITHUB_ENV
+        echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}" >> $GITHUB_ENV
+        echo "EMAIL_USER=${{ secrets.EMAIL_USER }}" >> $GITHUB_ENV
+        echo "EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }}" >> $GITHUB_ENV
+        echo "WECHAT_APP_ID=${{ secrets.WECHAT_APP_ID }}" >> $GITHUB_ENV
+        echo "WECHAT_APP_SECRET=${{ secrets.WECHAT_APP_SECRET }}" >> $GITHUB_ENV
+        echo "WEBHOOK_URL=${{ secrets.WEBHOOK_URL }}" >> $GITHUB_ENV
+
+    - name: Initialize database
+      run: |
+        python -c "
+        from app import create_app, db
+        app = create_app()
+        with app.app_context():
+            db.create_all()
+            print('Database initialized successfully')
+        "
+
     - name: Run daily analysis
-      env:
-        TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
-        WECHAT_APP_ID: ${{ secrets.WECHAT_APP_ID }}
-        WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
-        WECHAT_STOCK_TEMPLATE_ID: ${{ secrets.WECHAT_STOCK_TEMPLATE_ID }}
       run: |
         echo "开始每日股票分析..."
         python scripts/daily_analysis.py
-    
+
+    - name: Generate analysis report
+      run: |
+        echo "生成分析报告..."
+        python scripts/generate_report.py
+
     - name: Send WeChat notification
       if: success()
-      env:
-        WECHAT_APP_ID: ${{ secrets.WECHAT_APP_ID }}
-        WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
-        WECHAT_STOCK_TEMPLATE_ID: ${{ secrets.WECHAT_STOCK_TEMPLATE_ID }}
       run: |
         echo "发送微信通知..."
         python scripts/send_wechat_notification.py send-daily
+
+    - name: Send email notification
+      if: success()
+      run: |
+        echo "发送邮件通知..."
+        python scripts/send_email_notification.py
     
     - name: Upload analysis report
       uses: actions/upload-artifact@v4
