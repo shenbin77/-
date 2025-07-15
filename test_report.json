@@ -1,0 +1,30 @@
+{
+  "date": "2025-07-15",
+  "time": "08:47:36",
+  "title": "📈 测试股票推荐",
+  "summary": "这是一个测试报告",
+  "recommendations": [
+    {
+      "rank": 1,
+      "stock_code": "000001.SZ",
+      "stock_name": "平安银行",
+      "rating": "BUY",
+      "confidence": "85.2%",
+      "reasoning": "技术面突破，基本面良好",
+      "risk_level": "中等风险",
+      "predicted_return": "3.5%",
+      "momentum_score": "0.75"
+    },
+    {
+      "rank": 2,
+      "stock_code": "600036.SH",
+      "stock_name": "招商银行",
+      "rating": "STRONG_BUY",
+      "confidence": "92.1%",
+      "reasoning": "多因子模型显示强烈买入信号",
+      "risk_level": "低风险",
+      "predicted_return": "5.2%",
+      "momentum_score": "0.88"
+    }
+  ]
+}

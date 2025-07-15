@@ -1,0 +1,327 @@
+[
+  {
+    "stock_code": "000001.SZ",
+    "stock_name": "平安银行",
+    "analysis_date": "2025-07-14",
+    "overall_rating": "BUY",
+    "confidence_score": 0.9232341809881472,
+    "risk_score": 0.3576469667280935,
+    "target_price": 183.5,
+    "summary": "基于多智能体分析，平安银行(000001.SZ)当前具有较好的投资价值。银行行业前景看好，建议买入。",
+    "detailed_analysis": {
+      "fundamental_analysis": {
+        "pe_analysis": "市盈率处于合理区间",
+        "financial_health": "财务状况稳健",
+        "growth_potential": "增长潜力较大"
+      },
+      "technical_analysis": {
+        "trend_analysis": "技术趋势向好",
+        "support_resistance": "关键位置支撑有效",
+        "momentum": "动量指标积极"
+      },
+      "news_sentiment": {
+        "sentiment_score": 0.7,
+        "key_events": [
+          "银行行业动态",
+          "公司经营情况",
+          "市场环境变化"
+        ],
+        "market_impact": "新闻影响偏正面"
+      },
+      "risk_assessment": {
+        "market_risk": 0.2145881800368561,
+        "company_risk": 0.2861175733824748,
+        "liquidity_risk": 0.1430587866912374,
+        "overall_risk": 0.3576469667280935
+      }
+    },
+    "agents_opinions": [
+      {
+        "agent_type": "market",
+        "opinion": "技术分析显示平安银行当前处于上升趋势，建议关注突破信号。",
+        "score": 4.151324071119695,
+        "confidence": 0.7211702317832867
+      },
+      {
+        "agent_type": "fundamentals",
+        "opinion": "基本面分析表明平安银行财务状况良好，盈利能力稳定。银行行业整体前景看好。",
+        "score": 4.019495368469779,
+        "confidence": 0.790115705078729
+      },
+      {
+        "agent_type": "news",
+        "opinion": "近期关于平安银行的新闻整体偏正面，市场情绪积极。行业政策环境相对友好。",
+        "score": 3.655290937821694,
+        "confidence": 0.6832665558591672
+      }
+    ],
+    "full_decision": {
+      "action": "BUY",
+      "confidence": 0.9232341809881472,
+      "risk_score": 0.3576469667280935,
+      "reasoning": "基于多智能体分析，平安银行(000001.SZ)当前具有较好的投资价值。银行行业前景看好，建议买入。",
+      "target_price": 183.5
+    },
+    "industry": "银行"
+  },
+  {
+    "stock_code": "600519.SH",
+    "stock_name": "贵州茅台",
+    "analysis_date": "2025-07-14",
+    "overall_rating": "HOLD",
+    "confidence_score": 0.7839978421967603,
+    "risk_score": 0.31039271099474086,
+    "target_price": 141.35,
+    "summary": "基于多智能体分析，贵州茅台(600519.SH)当前可以继续持有观察。食品饮料行业发展平稳，建议持有。",
+    "detailed_analysis": {
+      "fundamental_analysis": {
+        "pe_analysis": "市盈率处于合理区间",
+        "financial_health": "财务状况一般",
+        "growth_potential": "增长潜力中等"
+      },
+      "technical_analysis": {
+        "trend_analysis": "技术趋势震荡",
+        "support_resistance": "关键位置支撑有效",
+        "momentum": "动量指标中性"
+      },
+      "news_sentiment": {
+        "sentiment_score": 0.5,
+        "key_events": [
+          "食品饮料行业动态",
+          "公司经营情况",
+          "市场环境变化"
+        ],
+        "market_impact": "新闻影响中性"
+      },
+      "risk_assessment": {
+        "market_risk": 0.1862356265968445,
+        "company_risk": 0.2483141687957927,
+        "liquidity_risk": 0.12415708439789636,
+        "overall_risk": 0.31039271099474086
+      }
+    },
+    "agents_opinions": [
+      {
+        "agent_type": "market",
+        "opinion": "技术分析显示贵州茅台当前处于震荡区间，需要等待明确方向。",
+        "score": 3.1980033106522905,
+        "confidence": 0.8491608546783405
+      },
+      {
+        "agent_type": "fundamentals",
+        "opinion": "基本面分析表明贵州茅台基本面表现平稳，估值合理。食品饮料行业整体发展平稳。",
+        "score": 2.8799182824125986,
+        "confidence": 0.8250055820249388
+      },
+      {
+        "agent_type": "news",
+        "opinion": "近期关于贵州茅台的新闻相对平稳，无重大利好利空。行业政策环境相对友好。",
+        "score": 2.9817271414636153,
+        "confidence": 0.6899047942018931
+      }
+    ],
+    "full_decision": {
+      "action": "HOLD",
+      "confidence": 0.7839978421967603,
+      "risk_score": 0.31039271099474086,
+      "reasoning": "基于多智能体分析，贵州茅台(600519.SH)当前可以继续持有观察。食品饮料行业发展平稳，建议持有。",
+      "target_price": 141.35
+    },
+    "industry": "食品饮料"
+  },
+  {
+    "stock_code": "000858.SZ",
+    "stock_name": "五粮液",
+    "analysis_date": "2025-07-14",
+    "overall_rating": "HOLD",
+    "confidence_score": 0.9492883848294668,
+    "risk_score": 0.28578267335330154,
+    "target_price": 62.9,
+    "summary": "基于多智能体分析，五粮液(000858.SZ)当前可以继续持有观察。食品饮料行业发展平稳，建议持有。",
+    "detailed_analysis": {
+      "fundamental_analysis": {
+        "pe_analysis": "市盈率处于合理区间",
+        "financial_health": "财务状况一般",
+        "growth_potential": "增长潜力中等"
+      },
+      "technical_analysis": {
+        "trend_analysis": "技术趋势震荡",
+        "support_resistance": "关键位置支撑有效",
+        "momentum": "动量指标中性"
+      },
+      "news_sentiment": {
+        "sentiment_score": 0.5,
+        "key_events": [
+          "食品饮料行业动态",
+          "公司经营情况",
+          "市场环境变化"
+        ],
+        "market_impact": "新闻影响中性"
+      },
+      "risk_assessment": {
+        "market_risk": 0.17146960401198091,
+        "company_risk": 0.22862613868264126,
+        "liquidity_risk": 0.11431306934132063,
+        "overall_risk": 0.28578267335330154
+      }
+    },
+    "agents_opinions": [
+      {
+        "agent_type": "market",
+        "opinion": "技术分析显示五粮液当前处于震荡区间，需要等待明确方向。",
+        "score": 3.2122258834514983,
+        "confidence": 0.8855318348659584
+      },
+      {
+        "agent_type": "fundamentals",
+        "opinion": "基本面分析表明五粮液基本面表现平稳，估值合理。食品饮料行业整体发展平稳。",
+        "score": 3.11210411233911,
+        "confidence": 0.8213637313032841
+      },
+      {
+        "agent_type": "news",
+        "opinion": "近期关于五粮液的新闻相对平稳，无重大利好利空。行业政策环境相对友好。",
+        "score": 2.7630454400106306,
+        "confidence": 0.7703193214608139
+      }
+    ],
+    "full_decision": {
+      "action": "HOLD",
+      "confidence": 0.9492883848294668,
+      "risk_score": 0.28578267335330154,
+      "reasoning": "基于多智能体分析，五粮液(000858.SZ)当前可以继续持有观察。食品饮料行业发展平稳，建议持有。",
+      "target_price": 62.9
+    },
+    "industry": "食品饮料"
+  },
+  {
+    "stock_code": "300750.SZ",
+    "stock_name": "宁德时代",
+    "analysis_date": "2025-07-14",
+    "overall_rating": "BUY",
+    "confidence_score": 0.8614639013953608,
+    "risk_score": 0.3248771267235126,
+    "target_price": 114.19,
+    "summary": "基于多智能体分析，宁德时代(300750.SZ)当前具有较好的投资价值。电池行业前景看好，建议买入。",
+    "detailed_analysis": {
+      "fundamental_analysis": {
+        "pe_analysis": "市盈率处于合理区间",
+        "financial_health": "财务状况稳健",
+        "growth_potential": "增长潜力较大"
+      },
+      "technical_analysis": {
+        "trend_analysis": "技术趋势向好",
+        "support_resistance": "关键位置支撑有效",
+        "momentum": "动量指标积极"
+      },
+      "news_sentiment": {
+        "sentiment_score": 0.7,
+        "key_events": [
+          "电池行业动态",
+          "公司经营情况",
+          "市场环境变化"
+        ],
+        "market_impact": "新闻影响偏正面"
+      },
+      "risk_assessment": {
+        "market_risk": 0.19492627603410756,
+        "company_risk": 0.2599017013788101,
+        "liquidity_risk": 0.12995085068940504,
+        "overall_risk": 0.3248771267235126
+      }
+    },
+    "agents_opinions": [
+      {
+        "agent_type": "market",
+        "opinion": "技术分析显示宁德时代当前处于上升趋势，建议关注突破信号。",
+        "score": 3.4336204341411083,
+        "confidence": 0.8858849936419615
+      },
+      {
+        "agent_type": "fundamentals",
+        "opinion": "基本面分析表明宁德时代财务状况良好，盈利能力稳定。电池行业整体前景看好。",
+        "score": 4.143911707105264,
+        "confidence": 0.8214672373207073
+      },
+      {
+        "agent_type": "news",
+        "opinion": "近期关于宁德时代的新闻整体偏正面，市场情绪积极。行业政策环境相对友好。",
+        "score": 3.2048679919325145,
+        "confidence": 0.6752346279327066
+      }
+    ],
+    "full_decision": {
+      "action": "BUY",
+      "confidence": 0.8614639013953608,
+      "risk_score": 0.3248771267235126,
+      "reasoning": "基于多智能体分析，宁德时代(300750.SZ)当前具有较好的投资价值。电池行业前景看好，建议买入。",
+      "target_price": 114.19
+    },
+    "industry": "电池"
+  },
+  {
+    "stock_code": "600036.SH",
+    "stock_name": "招商银行",
+    "analysis_date": "2025-07-14",
+    "overall_rating": "HOLD",
+    "confidence_score": 0.8235368840792759,
+    "risk_score": 0.3192334632973047,
+    "target_price": 122.08,
+    "summary": "基于多智能体分析，招商银行(600036.SH)当前可以继续持有观察。银行行业发展平稳，建议持有。",
+    "detailed_analysis": {
+      "fundamental_analysis": {
+        "pe_analysis": "市盈率处于合理区间",
+        "financial_health": "财务状况一般",
+        "growth_potential": "增长潜力中等"
+      },
+      "technical_analysis": {
+        "trend_analysis": "技术趋势震荡",
+        "support_resistance": "关键位置支撑有效",
+        "momentum": "动量指标中性"
+      },
+      "news_sentiment": {
+        "sentiment_score": 0.5,
+        "key_events": [
+          "银行行业动态",
+          "公司经营情况",
+          "市场环境变化"
+        ],
+        "market_impact": "新闻影响中性"
+      },
+      "risk_assessment": {
+        "market_risk": 0.1915400779783828,
+        "company_risk": 0.25538677063784376,
+        "liquidity_risk": 0.12769338531892188,
+        "overall_risk": 0.3192334632973047
+      }
+    },
+    "agents_opinions": [
+      {
+        "agent_type": "market",
+        "opinion": "技术分析显示招商银行当前处于震荡区间，需要等待明确方向。",
+        "score": 2.6016506720019614,
+        "confidence": 0.7733478261588991
+      },
+      {
+        "agent_type": "fundamentals",
+        "opinion": "基本面分析表明招商银行基本面表现平稳，估值合理。银行行业整体发展平稳。",
+        "score": 3.342875257312973,
+        "confidence": 0.7789414127229335
+      },
+      {
+        "agent_type": "news",
+        "opinion": "近期关于招商银行的新闻相对平稳，无重大利好利空。行业政策环境相对友好。",
+        "score": 3.5671779785009665,
+        "confidence": 0.6718928074588921
+      }
+    ],
+    "full_decision": {
+      "action": "HOLD",
+      "confidence": 0.8235368840792759,
+      "risk_score": 0.3192334632973047,
+      "reasoning": "基于多智能体分析，招商银行(600036.SH)当前可以继续持有观察。银行行业发展平稳，建议持有。",
+      "target_price": 122.08
+    },
+    "industry": "银行"
+  }
+]

@@ -1,0 +1,165 @@
+name: Daily Stock Analysis and Report
+
+on:
+  schedule:
+    # 每天北京时间早上6点运行 (UTC时间22点)
+    # 确保A股收盘后数据已更新
+    - cron: '0 22 * * *'
+  
+  # 允许手动触发，方便测试
+  workflow_dispatch:
+
+jobs:
+  analyze-and-report:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. 检出代码
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取完整历史，便于提交
+      
+      # 2. 设置Python环境
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      # 3. 安装依赖
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests pandas sqlite3 fastapi uvicorn
+          # 如果有requirements.txt文件，也安装其中的依赖
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+      
+      # 4. 启动AI分析服务
+      - name: Start AI Analysis Service
+        run: |
+          echo "🚀 启动AI分析服务..."
+          cd TradingAgents-CN-main
+          python simple_api_service.py &
+          AI_SERVICE_PID=$!
+          echo "AI_SERVICE_PID=$AI_SERVICE_PID" >> $GITHUB_ENV
+          
+          # 等待服务启动
+          echo "⏳ 等待AI服务启动..."
+          sleep 10
+          
+          # 检查服务是否正常
+          curl -f http://localhost:8000/health || exit 1
+          echo "✅ AI服务启动成功"
+      
+      # 5. 运行每日分析
+      - name: Run Daily Analysis
+        run: |
+          echo "📊 开始执行每日股票分析..."
+          python daily_analysis.py
+          echo "✅ 每日分析完成"
+      
+      # 6. 停止AI服务
+      - name: Stop AI Service
+        if: always()
+        run: |
+          if [ ! -z "$AI_SERVICE_PID" ]; then
+            echo "🛑 停止AI服务..."
+            kill $AI_SERVICE_PID || true
+          fi
+      
+      # 7. 提交报告到仓库
+      - name: Commit and Push Report
+        run: |
+          # 配置Git用户信息
+          git config --global user.name 'GitHub Actions Bot'
+          git config --global user.email 'actions-bot@github.com'
+          
+          # 添加生成的报告文件
+          git add reports/
+          
+          # 检查是否有变化需要提交
+          if git diff --staged --quiet; then
+            echo "📝 没有新的报告需要提交"
+          else
+            # 提交变化
+            REPORT_DATE=$(date +'%Y-%m-%d')
+            git commit -m "📈 每日AI分析报告 - $REPORT_DATE
+
+            🤖 自动生成的股票分析报告
+            📅 分析日期: $REPORT_DATE
+            🔧 生成时间: $(date +'%Y-%m-%d %H:%M:%S UTC')
+            
+            本报告由TradingAgents-CN多智能体系统自动生成，
+            包含AI对重点股票的深度分析和投资建议。"
+            
+            # 推送到仓库
+            git push
+            echo "✅ 报告已提交到仓库"
+          fi
+      
+      # 8. 生成报告摘要
+      - name: Generate Report Summary
+        run: |
+          echo "📋 生成报告摘要..."
+          REPORT_DATE=$(date +'%Y-%m-%d')
+          REPORT_FILE="reports/daily_report_$REPORT_DATE.md"
+          
+          if [ -f "$REPORT_FILE" ]; then
+            echo "## 📊 今日分析报告摘要" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**分析日期：** $REPORT_DATE" >> $GITHUB_STEP_SUMMARY
+            echo "**生成时间：** $(date +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # 提取报告的前几行作为摘要
+            head -20 "$REPORT_FILE" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "📖 [查看完整报告]($REPORT_FILE)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ 报告文件未找到" >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      # 9. 上传报告作为构建产物
+      - name: Upload Report as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: daily-analysis-report
+          path: reports/
+          retention-days: 30
+
+  # 可选：推送到微信公众号
+  push-to-wechat:
+    needs: analyze-and-report
+    runs-on: ubuntu-latest
+    if: success() && github.event_name == 'schedule'  # 只在定时任务成功时运行
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: main  # 确保获取最新的报告
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install WeChat Dependencies
+        run: |
+          pip install wechatpy requests
+      
+      - name: Push to WeChat Official Account
+        env:
+          WECHAT_APP_ID: ${{ secrets.WECHAT_APP_ID }}
+          WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
+        run: |
+          if [ -z "$WECHAT_APP_ID" ] || [ -z "$WECHAT_APP_SECRET" ]; then
+            echo "⚠️ 微信公众号密钥未配置，跳过推送"
+            exit 0
+          fi
+          
+          echo "📱 开始推送到微信公众号..."
+          python scripts/push_to_wechat.py
+          echo "✅ 微信公众号推送完成"

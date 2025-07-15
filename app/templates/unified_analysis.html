@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>统一分析 - 量化+AI智能体</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .analysis-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .rating-badge {
+            font-size: 1.2em;
+            padding: 8px 16px;
+        }
+        .confidence-bar {
+            height: 20px;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #dc3545 0%, #ffc107 50%, #28a745 100%);
+        }
+        .confidence-indicator {
+            height: 100%;
+            background: white;
+            border-radius: 10px;
+            position: relative;
+        }
+        .ai-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .quant-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        .unified-section {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        .loading-spinner {
+            display: none;
+        }
+        .analysis-timestamp {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center mb-4">
+                    <i class="fas fa-brain"></i> 统一股票分析系统
+                    <small class="text-muted">量化分析 + AI智能体</small>
+                </h1>
+            </div>
+        </div>
+
+        <!-- 分析输入区域 -->
+        <div class="row mb-4">
+            <div class="col-md-8 offset-md-2">
+                <div class="card analysis-card">
+                    <div class="card-body">
+                        <form id="analysisForm">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="stockCode" class="form-label">股票代码</label>
+                                    <input type="text" class="form-control" id="stockCode" placeholder="例如: 000001.SZ" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="tradeDate" class="form-label">分析日期</label>
+                                    <input type="date" class="form-control" id="tradeDate">
+                                </div>
+                                <div class="col-md-4 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-search"></i> 开始分析
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 加载状态 -->
+        <div class="row loading-spinner" id="loadingSpinner">
+            <div class="col-12 text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">分析中...</span>
+                </div>
+                <p class="mt-2">正在进行综合分析，请稍候...</p>
+            </div>
+        </div>
+
+        <!-- 分析结果区域 -->
+        <div id="analysisResults" style="display: none;">
+            <!-- 统一决策结果 -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card analysis-card unified-section">
+                        <div class="card-body text-center">
+                            <h3><i class="fas fa-trophy"></i> 最终投资建议</h3>
+                            <div class="row mt-3">
+                                <div class="col-md-4">
+                                    <h4>评级</h4>
+                                    <span id="finalRating" class="badge rating-badge">-</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4>置信度</h4>
+                                    <div class="confidence-bar mt-2">
+                                        <div id="finalConfidence" class="confidence-indicator"></div>
+                                    </div>
+                                    <span id="confidenceText" class="mt-1 d-block">-</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4>风险等级</h4>
+                                    <span id="riskLevel" class="badge rating-badge">-</span>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <h5>决策理由</h5>
+                                <p id="finalReasoning" class="mb-0">-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 详细分析结果 -->
+            <div class="row">
+                <!-- AI智能体分析 -->
+                <div class="col-md-6">
+                    <div class="card analysis-card ai-section">
+                        <div class="card-body">
+                            <h4><i class="fas fa-robot"></i> AI智能体分析</h4>
+                            <div id="aiAnalysisContent">
+                                <div class="mb-3">
+                                    <strong>整体评级:</strong> <span id="aiRating">-</span>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>置信度:</strong> <span id="aiConfidence">-</span>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>目标价格:</strong> <span id="targetPrice">-</span>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>投资建议:</strong>
+                                    <p id="investmentAdvice" class="mb-0">-</p>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>分析摘要:</strong>
+                                    <div id="analysisSummary">
+                                        <small><strong>市场分析:</strong> <span id="marketAnalysis">-</span></small><br>
+                                        <small><strong>基本面分析:</strong> <span id="fundamentalAnalysis">-</span></small><br>
+                                        <small><strong>新闻分析:</strong> <span id="newsAnalysis">-</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="aiError" style="display: none;">
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    AI分析暂不可用: <span id="aiErrorMsg">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 量化分析 -->
+                <div class="col-md-6">
+                    <div class="card analysis-card quant-section">
+                        <div class="card-body">
+                            <h4><i class="fas fa-chart-line"></i> 量化分析</h4>
+                            <div id="quantAnalysisContent">
+                                <div class="mb-3">
+                                    <strong>因子得分:</strong>
+                                    <ul id="factorScores" class="list-unstyled mt-2">
+                                        <li>动量因子: <span id="momentumScore">-</span></li>
+                                        <li>价值因子: <span id="valueScore">-</span></li>
+                                        <li>质量因子: <span id="qualityScore">-</span></li>
+                                        <li>波动率因子: <span id="volatilityScore">-</span></li>
+                                    </ul>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>ML模型预测:</strong>
+                                    <ul class="list-unstyled mt-2">
+                                        <li>预测收益: <span id="predictedReturn">-</span></li>
+                                        <li>模型置信度: <span id="mlConfidence">-</span></li>
+                                        <li>使用模型: <span id="modelUsed">-</span></li>
+                                    </ul>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>技术指标:</strong>
+                                    <ul class="list-unstyled mt-2">
+                                        <li>RSI: <span id="rsiValue">-</span></li>
+                                        <li>MACD信号: <span id="macdSignal">-</span></li>
+                                        <li>布林带位置: <span id="bollingerPosition">-</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 分析时间戳 -->
+            <div class="row mt-3">
+                <div class="col-12 text-center">
+                    <p class="analysis-timestamp">
+                        分析时间: <span id="analysisTimestamp">-</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 设置默认日期为今天
+        document.getElementById('tradeDate').value = new Date().toISOString().split('T')[0];
+
+        // 表单提交处理
+        document.getElementById('analysisForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const stockCode = document.getElementById('stockCode').value;
+            const tradeDate = document.getElementById('tradeDate').value;
+            
+            if (!stockCode) {
+                alert('请输入股票代码');
+                return;
+            }
+            
+            performUnifiedAnalysis(stockCode, tradeDate);
+        });
+
+        function performUnifiedAnalysis(stockCode, tradeDate) {
+            // 显示加载状态
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('analysisResults').style.display = 'none';
+            
+            // 发送分析请求
+            fetch('/api/ml-factor/analysis/unified', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    stock_code: stockCode,
+                    trade_date: tradeDate
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loadingSpinner').style.display = 'none';
+                
+                if (data.success) {
+                    displayAnalysisResults(data.data);
+                } else {
+                    alert('分析失败: ' + (data.error || '未知错误'));
+                }
+            })
+            .catch(error => {
+                document.getElementById('loadingSpinner').style.display = 'none';
+                alert('请求失败: ' + error.message);
+            });
+        }
+
+        function displayAnalysisResults(data) {
+            // 显示结果区域
+            document.getElementById('analysisResults').style.display = 'block';
+            
+            // 最终决策
+            const finalDecision = data.final_decision || {};
+            document.getElementById('finalRating').textContent = finalDecision.rating || '-';
+            document.getElementById('finalRating').className = `badge rating-badge ${getRatingClass(finalDecision.rating)}`;
+            
+            const confidence = finalDecision.confidence || 0;
+            document.getElementById('finalConfidence').style.left = `${confidence * 100}%`;
+            document.getElementById('confidenceText').textContent = `${(confidence * 100).toFixed(1)}%`;
+            
+            document.getElementById('riskLevel').textContent = getRiskLevel(finalDecision.risk_level);
+            document.getElementById('finalReasoning').textContent = finalDecision.reasoning || '-';
+            
+            // AI分析结果
+            const aiAnalysis = data.ai_analysis || {};
+            if (aiAnalysis.ai_available) {
+                document.getElementById('aiAnalysisContent').style.display = 'block';
+                document.getElementById('aiError').style.display = 'none';
+                
+                document.getElementById('aiRating').textContent = aiAnalysis.overall_rating || '-';
+                document.getElementById('aiConfidence').textContent = `${((aiAnalysis.confidence || 0) * 100).toFixed(1)}%`;
+                document.getElementById('targetPrice').textContent = aiAnalysis.target_price || '-';
+                document.getElementById('investmentAdvice').textContent = aiAnalysis.investment_advice || '-';
+                
+                const summary = aiAnalysis.analysis_summary || {};
+                document.getElementById('marketAnalysis').textContent = summary.market_analysis || '-';
+                document.getElementById('fundamentalAnalysis').textContent = summary.fundamental_analysis || '-';
+                document.getElementById('newsAnalysis').textContent = summary.news_analysis || '-';
+            } else {
+                document.getElementById('aiAnalysisContent').style.display = 'none';
+                document.getElementById('aiError').style.display = 'block';
+                document.getElementById('aiErrorMsg').textContent = aiAnalysis.error || '服务不可用';
+            }
+            
+            // 量化分析结果
+            const quantAnalysis = data.quantitative_analysis || {};
+            const factorScores = quantAnalysis.factor_scores || {};
+            const mlPrediction = quantAnalysis.ml_prediction || {};
+            const technicalIndicators = quantAnalysis.technical_indicators || {};
+            
+            document.getElementById('momentumScore').textContent = (factorScores.momentum_score || 0).toFixed(2);
+            document.getElementById('valueScore').textContent = (factorScores.value_score || 0).toFixed(2);
+            document.getElementById('qualityScore').textContent = (factorScores.quality_score || 0).toFixed(2);
+            document.getElementById('volatilityScore').textContent = (factorScores.volatility_score || 0).toFixed(2);
+            
+            document.getElementById('predictedReturn').textContent = `${((mlPrediction.predicted_return || 0) * 100).toFixed(2)}%`;
+            document.getElementById('mlConfidence').textContent = `${((mlPrediction.confidence || 0) * 100).toFixed(1)}%`;
+            document.getElementById('modelUsed').textContent = mlPrediction.model_used || '-';
+            
+            document.getElementById('rsiValue').textContent = technicalIndicators.rsi || '-';
+            document.getElementById('macdSignal').textContent = technicalIndicators.macd_signal || '-';
+            document.getElementById('bollingerPosition').textContent = technicalIndicators.bollinger_position || '-';
+            
+            // 分析时间戳
+            document.getElementById('analysisTimestamp').textContent = data.analysis_timestamp || '-';
+        }
+
+        function getRatingClass(rating) {
+            switch(rating) {
+                case 'STRONG_BUY': return 'bg-success';
+                case 'BUY': return 'bg-primary';
+                case 'HOLD': return 'bg-warning';
+                case 'SELL': return 'bg-danger';
+                case 'STRONG_SELL': return 'bg-dark';
+                default: return 'bg-secondary';
+            }
+        }
+
+        function getRiskLevel(riskScore) {
+            if (riskScore < 0.3) return '低风险';
+            if (riskScore < 0.7) return '中等风险';
+            return '高风险';
+        }
+    </script>
+</body>
+</html>

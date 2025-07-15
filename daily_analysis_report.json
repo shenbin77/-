@@ -1,0 +1,69 @@
+{
+  "date": "2025-07-15",
+  "time": "08:47:23",
+  "title": "📈 今日盘前推荐",
+  "summary": "基于多因子模型和机器学习分析，推荐 4 只股票",
+  "method": "直接数据库分析",
+  "data_source": "本地数据库",
+  "recommendations": [
+    {
+      "rank": 1,
+      "stock_code": "600519.SH",
+      "stock_name": "贵州茅台",
+      "rating": "HOLD",
+      "confidence": "59.8%",
+      "composite_score": "0.325",
+      "factor_score": "0.094",
+      "ml_prediction": "-0.067",
+      "ml_rank": 9,
+      "volatility": "0.313",
+      "risk_level": "中等风险",
+      "reasoning": "综合评分0.325，动量因子0.094，ML预测-0.067，波动率0.313"
+    },
+    {
+      "rank": 2,
+      "stock_code": "000001.SZ",
+      "stock_name": "平安银行",
+      "rating": "HOLD",
+      "confidence": "59.7%",
+      "composite_score": "0.323",
+      "factor_score": "-0.099",
+      "ml_prediction": "-0.066",
+      "ml_rank": 8,
+      "volatility": "0.286",
+      "risk_level": "低风险",
+      "reasoning": "综合评分0.323，动量因子-0.099，ML预测-0.066，波动率0.286"
+    },
+    {
+      "rank": 3,
+      "stock_code": "000876.SZ",
+      "stock_name": "新希望",
+      "rating": "SELL",
+      "confidence": "54.0%",
+      "composite_score": "0.135",
+      "factor_score": "-0.048",
+      "ml_prediction": "0.026",
+      "ml_rank": 2,
+      "volatility": "0.014",
+      "risk_level": "低风险",
+      "reasoning": "综合评分0.135，动量因子-0.048，ML预测0.026，波动率0.014"
+    },
+    {
+      "rank": 4,
+      "stock_code": "600887.SH",
+      "stock_name": "伊利股份",
+      "rating": "SELL",
+      "confidence": "53.7%",
+      "composite_score": "0.123",
+      "factor_score": "0.009",
+      "ml_prediction": "0.029",
+      "ml_rank": 1,
+      "volatility": "0.294",
+      "risk_level": "低风险",
+      "reasoning": "综合评分0.123，动量因子0.009，ML预测0.029，波动率0.294"
+    }
+  ],
+  "risk_warning": "投资有风险，入市需谨慎。本推荐仅供参考，不构成投资建议。",
+  "update_time": "2025-07-15T08:47:23.598238",
+  "analysis_status": "成功"
+}
