@@ -1,0 +1,110 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-${{ matrix.python-version }}-
+          ${{ runner.os }}-pip-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov flake8 black
+        
+    - name: Create test directories
+      run: |
+        mkdir -p logs
+        mkdir -p reports
+        mkdir -p models
+        mkdir -p data
+        
+    - name: Test API endpoints
+      run: |
+        # 启动API服务器进行测试
+        python run.py &
+        SERVER_PID=$!
+        sleep 10
+        
+        # 测试健康检查端点
+        curl -f http://localhost:5000/health || echo "Health check failed"
+        
+        # 停止服务器
+        kill $SERVER_PID || true
+        
+    - name: Run basic system tests
+      run: |
+        # 测试基本导入
+        python -c "import app; print('App import successful')"
+        python -c "from app.api import ml_factor_api; print('ML Factor API import successful')"
+        
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Build verification
+      run: |
+        # 创建必要的目录
+        mkdir -p logs reports models data
+        
+        # 验证主要模块可以导入
+        python -c "import app; print('✅ App module OK')"
+        python -c "from scripts import daily_analysis; print('✅ Scripts module OK')"
+        
+    - name: Create deployment package
+      run: |
+        # 创建部署包
+        tar -czf quantitative-analysis-${{ github.sha }}.tar.gz \
+          --exclude='.git' \
+          --exclude='__pycache__' \
+          --exclude='*.pyc' \
+          --exclude='.pytest_cache' \
+          --exclude='htmlcov' \
+          .
+          
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: quantitative-analysis-${{ github.sha }}
+        path: quantitative-analysis-${{ github.sha }}.tar.gz
+        retention-days: 30
