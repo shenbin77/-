@@ -8,6 +8,7 @@ WeChat Official Account Message Sender
 import requests
 import json
 import time
+import re
 from datetime import datetime
 from wechat_config import WECHAT_APP_ID, WECHAT_APP_SECRET, SUBSCRIBER_OPENIDS
 
@@ -56,46 +57,73 @@ class WeChatSender:
         """发送文本消息"""
         if openids is None:
             openids = SUBSCRIBER_OPENIDS
-            
+
         access_token = self.get_access_token()
         if not access_token:
             return False
-            
+
         url = f"https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={access_token}"
-        
+
+        # 替换可能导致乱码的字符
+        safe_message = message
+        # 替换表情符号
+        emoji_pattern = re.compile("["
+                               u"\U0001F600-\U0001F64F"  # emoticons
+                               u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+                               u"\U0001F680-\U0001F6FF"  # transport & map symbols
+                               u"\U0001F700-\U0001F77F"  # alchemical symbols
+                               u"\U0001F780-\U0001F7FF"  # Geometric Shapes
+                               u"\U0001F800-\U0001F8FF"  # Supplemental Arrows-C
+                               u"\U0001F900-\U0001F9FF"  # Supplemental Symbols and Pictographs
+                               u"\U0001FA00-\U0001FA6F"  # Chess Symbols
+                               u"\U0001FA70-\U0001FAFF"  # Symbols and Pictographs Extended-A
+                               u"\U00002702-\U000027B0"  # Dingbats
+                               u"\U000024C2-\U0001F251"
+                               "]+", flags=re.UNICODE)
+        safe_message = emoji_pattern.sub(r'', safe_message)
+
+        # 替换特殊符号
+        safe_message = safe_message.replace('📊', '[图表]')
+        safe_message = safe_message.replace('🕐', '[时间]')
+        safe_message = safe_message.replace('🔥', '[热门]')
+        safe_message = safe_message.replace('📈', '[上涨]')
+        safe_message = safe_message.replace('💡', '[提示]')
+        safe_message = safe_message.replace('⚠️', '[警告]')
+        safe_message = safe_message.replace('🤖', '[机器人]')
+
         success_count = 0
         for openid in openids:
             data = {
                 "touser": openid,
                 "msgtype": "text",
                 "text": {
-                    "content": message
+                    "content": safe_message
                 }
             }
-            
+
             try:
                 response = requests.post(url, json=data)
                 result = response.json()
-                
+
                 if result.get('errcode') == 0:
                     print(f"✅ 消息发送成功到: {openid[:10]}...")
                     success_count += 1
                 else:
                     print(f"❌ 消息发送失败到: {openid[:10]}..., 错误: {result}")
-                    
+
             except Exception as e:
                 print(f"❌ 发送消息异常: {e}")
-                
+
         return success_count > 0
     
     def send_stock_report(self, stock_data):
         """发送股票分析报告"""
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
-        message = f"""📊 AI股票分析日报
-🕐 时间: {current_time}
 
-🔥 今日推荐股票:
+        message = f"""股票分析日报
+时间: {current_time}
+
+今日推荐股票:
 """
         
         if isinstance(stock_data, list) and len(stock_data) > 0:
@@ -108,8 +136,8 @@ class WeChatSender:
                     
                     message += f"""
 {i}. {name} ({symbol})
-   📈 评分: {score:.2f}
-   💡 理由: {reason}
+   评分: {score:.2f}
+   理由: {reason}
 """
                 else:
                     message += f"\n{i}. {stock}"
@@ -118,11 +146,11 @@ class WeChatSender:
             
         message += f"""
 
-⚠️ 风险提示: 
+风险提示:
 投资有风险，入市需谨慎。
 本分析仅供参考，不构成投资建议。
 
-🤖 由AI量化分析系统自动生成
+由AI量化分析系统自动生成
 """
         
         return self.send_text_message(message)
@@ -134,20 +162,20 @@ def test_wechat_sender():
     sender = WeChatSender()
     
     # 测试发送简单消息
-    test_message = f"""🎉 微信推送测试成功！
+    test_message = f"""微信推送测试成功
 
-⏰ 测试时间: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+测试时间: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
-🤖 AI股票分析系统已连接微信公众号！
-每日股票推荐将自动推送到您的微信。
+股票分析系统已连接微信公众号
+每日股票推荐将自动推送到您的微信
 
-📊 系统功能:
-✅ 股票数据分析
-✅ AI模型预测  
-✅ 自动推送报告
-✅ 微信消息通知
+系统功能:
+- 股票数据分析
+- AI模型预测
+- 自动推送报告
+- 微信消息通知
 
-💡 接下来您将收到每日股票分析报告！"""
+接下来您将收到每日股票分析报告"""
     
     success = sender.send_text_message(test_message)
     

@@ -1,0 +1,30 @@
+{
+  "api_configuration": {
+    "dashscope": {
+      "key": "sk-61f17f4d75fc45429a44977814eb8cf7",
+      "status": "✅ 已配置"
+    },
+    "finnhub": {
+      "key": "d1o6dhpr01qtrauve680d1o6dhpr01qtrauve68g",
+      "status": "✅ 已配置"
+    }
+  },
+  "system_capabilities": [
+    "多智能体股票分析",
+    "实时数据获取",
+    "AI驱动的技术分析",
+    "概率化风险评估",
+    "结构化JSON输出"
+  ],
+  "cost_estimation": {
+    "dashscope_per_analysis": "0.1-0.3元",
+    "finnhub_free_limit": "每分钟60次请求",
+    "monthly_cost_estimate": "150-500元 (中等使用量)"
+  },
+  "next_steps": [
+    "测试完整的TradingAgents功能",
+    "开发实时数据更新模块",
+    "优化用户界面展示",
+    "集成更多技术指标"
+  ]
+}
