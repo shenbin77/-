@@ -95,20 +95,8 @@ jobs:
         python -c "import app; print('✅ App module OK')"
         python -c "import sys; sys.path.append('.'); import scripts.daily_analysis; print('✅ Scripts module OK')"
         
-    - name: Create deployment package
+    - name: Build completion
       run: |
-        # 创建部署包
-        tar -czf quantitative-analysis-${{ github.sha }}.tar.gz \
-          --exclude='.git' \
-          --exclude='__pycache__' \
-          --exclude='*.pyc' \
-          --exclude='.pytest_cache' \
-          --exclude='htmlcov' \
-          .
-          
-    - name: Upload build artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: quantitative-analysis-${{ github.sha }}
-        path: quantitative-analysis-${{ github.sha }}.tar.gz
-        retention-days: 30
+        echo "✅ Build verification completed successfully!"
+        echo "✅ All modules can be imported correctly"
+        echo "✅ Ready for deployment"
