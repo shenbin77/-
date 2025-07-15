@@ -60,7 +60,9 @@ class AutoGitSync:
                 cwd=self.repo_path,
                 capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
+                encoding='utf-8',
+                errors='ignore'
             )
             
             if result.returncode == 0:
@@ -142,7 +144,9 @@ class AutoGitSync:
                 cwd=self.repo_path,
                 capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
+                encoding='utf-8',
+                errors='ignore'
             )
             
             if add_result.returncode != 0:
@@ -160,7 +164,9 @@ class AutoGitSync:
                 cwd=self.repo_path,
                 capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
+                encoding='utf-8',
+                errors='ignore'
             )
             
             if commit_result.returncode != 0:
@@ -174,7 +180,9 @@ class AutoGitSync:
                 cwd=self.repo_path,
                 capture_output=True,
                 text=True,
-                timeout=120
+                timeout=120,
+                encoding='utf-8',
+                errors='ignore'
             )
             
             if push_result.returncode != 0:
