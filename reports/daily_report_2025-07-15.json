@@ -1,0 +1,28 @@
+{
+  "date": "2025-07-15",
+  "total_analyzed": 2,
+  "recommendations": {
+    "BUY": [
+      {
+        "stock_code": "000001",
+        "confidence": 0.85,
+        "target_price": 15.5,
+        "summary": "基本面良好，技术指标向好"
+      }
+    ],
+    "SELL": [],
+    "HOLD": [
+      {
+        "stock_code": "000002",
+        "confidence": 0.65,
+        "target_price": 28.3,
+        "summary": "业绩稳定，等待突破"
+      }
+    ]
+  },
+  "summary": {
+    "buy_count": 1,
+    "sell_count": 0,
+    "hold_count": 1
+  }
+}

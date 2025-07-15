@@ -86,10 +86,14 @@ jobs:
       run: |
         # 创建必要的目录
         mkdir -p logs reports models data
-        
+
+        # 设置环境变量
+        export TUSHARE_TOKEN="test_token"
+        export FLASK_SECRET_KEY="test_secret"
+
         # 验证主要模块可以导入
         python -c "import app; print('✅ App module OK')"
-        python -c "from scripts import daily_analysis; print('✅ Scripts module OK')"
+        python -c "import sys; sys.path.append('.'); import scripts.daily_analysis; print('✅ Scripts module OK')"
         
     - name: Create deployment package
       run: |
