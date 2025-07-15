@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      TUSHARE_TOKEN: ${{ secrets.TUSHARE }}
+      TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
       FLASK_SECRET_KEY: ${{ secrets.FLASK_SECRET_KEY }}
       DATABASE_URL: sqlite:///stock_analysis.db
       EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
@@ -19,6 +19,7 @@ jobs:
       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
       WECHAT_APP_ID: ${{ secrets.WECHAT_APP_ID }}
       WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
+      WECHAT_STOCK_TEMPLATE_ID: ${{ secrets.WECHAT_STOCK_TEMPLATE_ID }}
       WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
     
     steps:
@@ -40,13 +41,13 @@ jobs:
         mkdir -p data
         mkdir -p logs
         mkdir -p reports
-    
+
     - name: Test basic functionality
       run: |
         echo "测试基础功能..."
         python -c "
         import os
-        os.environ['TUSHARE_TOKEN'] = '${{ secrets.TUSHARE }}'
+        os.environ['TUSHARE_TOKEN'] = '${{ secrets.TUSHARE_TOKEN }}'
         os.environ['FLASK_SECRET_KEY'] = '${{ secrets.FLASK_SECRET_KEY }}'
         from app import create_app, db
         app = create_app()
@@ -55,16 +56,25 @@ jobs:
             print('✅ 数据库初始化成功')
         "
 
-    - name: Generate test report
+    - name: Run daily analysis
+      env:
+        TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
+        WECHAT_APP_ID: ${{ secrets.WECHAT_APP_ID }}
+        WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
+        WECHAT_STOCK_TEMPLATE_ID: ${{ secrets.WECHAT_STOCK_TEMPLATE_ID }}
       run: |
-        echo "生成测试报告..."
-        python scripts/generate_report.py
+        echo "开始每日股票分析..."
+        python scripts/daily_analysis.py
 
-    - name: Test notification scripts
+    - name: Send WeChat notification
+      if: success()
+      env:
+        WECHAT_APP_ID: ${{ secrets.WECHAT_APP_ID }}
+        WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
+        WECHAT_STOCK_TEMPLATE_ID: ${{ secrets.WECHAT_STOCK_TEMPLATE_ID }}
       run: |
-        echo "测试通知脚本..."
-        echo "✅ 微信通知脚本检查完成"
-        echo "✅ 邮件通知脚本检查完成"
+        echo "发送微信通知..."
+        python scripts/send_wechat_notification.py send-daily
     
     - name: Upload analysis report
       uses: actions/upload-artifact@v4

@@ -2,11 +2,9 @@
 
 一个功能完整的多因子选股系统，集成了因子计算、机器学习建模、股票选择、组合优化和回测验证等功能。
 
-### 本系统仅限于学习交流，需要二次开发或定制化开发，请联系 39189996@qq.com
+### 本系统仅限于学习交流，需要二次开发或定制化开发，请联系
 
-### 数据库下载地址：
--- 通过网盘分享的文件：stock_cursor.sql.zip
--- 链接: https://pan.baidu.com/s/1vOtkLP8pQEU8k0pGRaYwUw?pwd=q4mg 提取码: q4mg
+
 
 ![系统主界面](./images/1-2.png)
 
@@ -440,11 +438,8 @@ pip install -r requirements_minimal.txt
 
 欢迎提交Issue和Pull Request来改进这个项目。
 
-## 📞 联系方式
 
-如有问题或建议，请通过以下方式联系：
-- 提交Issue
-- 发送邮件：39189996@qq.com
+
 
 ---
 
