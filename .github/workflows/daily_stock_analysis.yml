@@ -1,0 +1,91 @@
+name: 每日股票分析推送
+# Daily Stock Analysis Push
+
+on:
+  schedule:
+    # 每天早上8:30 (UTC时间00:30，北京时间8:30)
+    - cron: '30 0 * * *'
+    # 每天下午6:30 (UTC时间10:30，北京时间18:30)  
+    - cron: '30 10 * * *'
+  
+  # 允许手动触发
+  workflow_dispatch:
+    inputs:
+      analysis_type:
+        description: '分析类型'
+        required: true
+        default: 'daily'
+        type: choice
+        options:
+        - daily
+        - test
+        - full
+
+jobs:
+  stock_analysis:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+      
+    - name: 设置Python环境
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: 安装依赖
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests pandas numpy
+        
+    - name: 配置微信环境变量
+      env:
+        WECHAT_APP_ID: ${{ secrets.WECHAT_APP_ID }}
+        WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
+        WECHAT_OPENID: ${{ secrets.WECHAT_OPENID }}
+      run: |
+        echo "配置微信推送环境..."
+        # 创建配置文件
+        cat > wechat_config.py << EOF
+        # 微信公众号配置 - GitHub Actions版本
+        import os
+        
+        WECHAT_APP_ID = os.environ.get('WECHAT_APP_ID', '')
+        WECHAT_APP_SECRET = os.environ.get('WECHAT_APP_SECRET', '')
+        SUBSCRIBER_OPENIDS = [os.environ.get('WECHAT_OPENID', '')]
+        
+        # 模板配置
+        TEMPLATE_ID_DAILY_REPORT = ""
+        TEMPLATE_ID_STOCK_ALERT = ""
+        EOF
+        
+    - name: 运行股票分析
+      env:
+        WECHAT_APP_ID: ${{ secrets.WECHAT_APP_ID }}
+        WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
+        WECHAT_OPENID: ${{ secrets.WECHAT_OPENID }}
+      run: |
+        echo "🚀 开始每日股票分析..."
+        python daily_stock_report.py
+        
+    - name: 生成分析报告
+      run: |
+        echo "📊 生成分析报告..."
+        mkdir -p reports
+        echo "# 每日股票分析报告" > reports/daily_report_$(date +%Y-%m-%d).md
+        echo "生成时间: $(date)" >> reports/daily_report_$(date +%Y-%m-%d).md
+        echo "分析状态: 完成" >> reports/daily_report_$(date +%Y-%m-%d).md
+        
+    - name: 提交报告到仓库
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add reports/
+        git diff --staged --quiet || git commit -m "📊 每日股票分析报告 $(date +%Y-%m-%d)"
+        git push
+        
+    - name: 发送通知
+      if: failure()
+      run: |
+        echo "❌ 股票分析任务失败，请检查日志"
